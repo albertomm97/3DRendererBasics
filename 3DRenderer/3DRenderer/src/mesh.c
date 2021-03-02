@@ -7,7 +7,8 @@
 static mesh_t meshes[MAX_NUM_MESHES];
 static int mesh_count = 0;
 
-void load_mesh_obj_data(mesh_t* mesh, char* obj_filename) {
+void load_mesh_obj_data(mesh_t* mesh, char* obj_filename) 
+{
     FILE* file;
     file = fopen(obj_filename, "r");
     char line[1024];
@@ -52,7 +53,8 @@ void load_mesh_obj_data(mesh_t* mesh, char* obj_filename) {
     fclose(file);
 }
 
-void load_mesh_png_data(mesh_t* mesh, char* png_filename) {
+void load_mesh_png_data(mesh_t* mesh, char* png_filename) 
+{
     upng_t* png_image = upng_new_from_file(png_filename);
     if (png_image != NULL) {
         upng_decode(png_image);
@@ -62,38 +64,45 @@ void load_mesh_png_data(mesh_t* mesh, char* png_filename) {
     }
 }
 
-void load_mesh(char* obj_filename, char* png_filename, vec3_t scale, vec3_t translation, vec3_t rotation) {
+void load_mesh(char* obj_filename, char* png_filename, vec3_t* scale, vec3_t* translation, vec3_t* rotation) 
+{
     load_mesh_obj_data(&meshes[mesh_count], obj_filename);
     load_mesh_png_data(&meshes[mesh_count], png_filename);
 
-    meshes[mesh_count].scale = scale;
-    meshes[mesh_count].translation = translation;
-    meshes[mesh_count].rotation = rotation;
+    meshes[mesh_count].scale = *(scale);
+    meshes[mesh_count].translation = *(translation);
+    meshes[mesh_count].rotation = *(rotation);
 
     mesh_count++;
 }
 
-mesh_t* get_mesh(int mesh_index) {
+mesh_t* get_mesh(int mesh_index) 
+{
     return &meshes[mesh_index];
 }
 
-int get_num_meshes(void) {
+int get_num_meshes(void) 
+{
     return mesh_count;
 }
 
-void rotate_mesh_x(int mesh_index, float angle) {
+void rotate_mesh_x(int mesh_index, float angle) 
+{
     meshes[mesh_index].rotation.x += angle;
 }
 
-void rotate_mesh_y(int mesh_index, float angle) {
+void rotate_mesh_y(int mesh_index, float angle) 
+{
     meshes[mesh_index].rotation.y += angle;
 }
 
-void rotate_mesh_z(int mesh_index, float angle) {
+void rotate_mesh_z(int mesh_index, float angle) 
+{
     meshes[mesh_index].rotation.z += angle;
 }
 
-void free_meshes(void) {
+void free_meshes(void) 
+{
     for (int i = 0; i < mesh_count; i++) {
         array_free(meshes[i].faces);
         array_free(meshes[i].vertices);
