@@ -2,17 +2,17 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
-#include "upng.h"
-#include "array.h"
-#include "display.h"
-#include "triangle.h"
-#include "clipping.h"
-#include "vector.h"
-#include "matrix.h"
-#include "light.h"
-#include "camera.h"
-#include "texture.h"
-#include "mesh.h"
+#include "src/upng.h"
+#include "src/array.h"
+#include "src/display.h"
+#include "src/triangle.h"
+#include "src/clipping.h"
+#include "src/vector.h"
+#include "src/matrix.h"
+#include "src/light.h"
+#include "src/camera.h"
+#include "src/texture.h"
+#include "src/mesh.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Global variables for execution status and game loop

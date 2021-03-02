@@ -5,23 +5,27 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Return the normal vector of a triangle face
 ///////////////////////////////////////////////////////////////////////////////
-vec3_t get_triangle_normal(vec4_t vertices[3]) {
+void get_triangle_normal(vec4_t* vertices, vec3_t* face_normal) 
+{
     // Get individual vectors from A, B, and C vertices to compute normal
-    vec3_t vector_a = vec3_from_vec4(vertices[0]); /*   A   */
-    vec3_t vector_b = vec3_from_vec4(vertices[1]); /*  / \  */
-    vec3_t vector_c = vec3_from_vec4(vertices[2]); /* C---B */
+    vec3_t vector_a = { {0} };
+    vec3_from_vec4(&vertices[0], &vector_a); /*   A   */
+    vec3_t vector_b = { {0} };
+    vec3_from_vec4(&vertices[1], &vector_b); /*  / \  */
+    vec3_t vector_c = { {0} };
+    vec3_from_vec4(&vertices[2], &vector_c); /* C---B */
 
     // Get the vector subtraction of B-A and C-A
-    vec3_t vector_ab = vec3_sub(vector_b, vector_a);
-    vec3_t vector_ac = vec3_sub(vector_c, vector_a);
-    vec3_normalize(&vector_ab);
-    vec3_normalize(&vector_ac);
+    vec3_t ba = { {0} };
+    vec3_sub(&vector_b, &vector_a, &ba);
+    vec3_t ca = { {0} };
+    vec3_sub(&vector_c, &vector_a, &ca);
+    vec3_normalize(&ba);
+    vec3_normalize(&ca);
 
     // Compute the face normal (using cross product to find perpendicular)
-    vec3_t normal = vec3_cross(vector_ab, vector_ac);
-    vec3_normalize(&normal);
-
-    return normal;
+    vec3_cross(&ba, &ca, face_normal);
+    vec3_normalize(face_normal);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,13 +43,18 @@ vec3_t get_triangle_normal(vec4_t vertices[3]) {
 //  B ------------- C
 //
 ///////////////////////////////////////////////////////////////////////////////
-vec3_t barycentric_weights(vec2_t a, vec2_t b, vec2_t c, vec2_t p) {
+vec3_t barycentric_weights(vec2_t* a, vec2_t* b, vec2_t* c, vec2_t* p, vec3_t* r) {
     // Find the vectors between the vertices ABC and point p
-    vec2_t ab = vec2_sub(b, a);
-    vec2_t bc = vec2_sub(c, b);
-    vec2_t ac = vec2_sub(c, a);
-    vec2_t ap = vec2_sub(p, a);
-    vec2_t bp = vec2_sub(p, b);
+    vec2_t ab = { {0} };
+    vec2_sub(b, a, &ab);
+    vec2_t bc = { {0} };
+    vec2_sub(c, b, &bc);
+    vec2_t ac = { {0} };
+    vec2_sub(c, a, &ac);
+    vec2_t ap = { {0} };
+    vec2_sub(p, a, &ap);
+    vec2_t bp = { {0} };
+    vec2_sub(p, b, &bp);
 
     // Calcualte the area of the full triangle ABC using cross product (area of parallelogram)
     float area_triangle_abc = (ab.x * ac.y - ab.y * ac.x);
@@ -59,8 +68,9 @@ vec3_t barycentric_weights(vec2_t a, vec2_t b, vec2_t c, vec2_t p) {
     // Weight gamma is easily found since barycentric cooordinates always add up to 1
     float gamma = 1 - alpha - beta;
 
-    vec3_t weights = { alpha, beta, gamma };
-    return weights;
+    r->x = alpha;
+    r->y = beta;
+    r->z = gamma;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -77,17 +87,21 @@ void draw_triangle(int x0, int y0, int x1, int y1, int x2, int y2, uint32_t colo
 ///////////////////////////////////////////////////////////////////////////////
 void draw_triangle_pixel(
     int x, int y,
-    vec4_t point_a, vec4_t point_b, vec4_t point_c,
+    vec4_t* point_a, vec4_t* point_b, vec4_t* point_c,
     uint32_t color
 ) {
     // Create three vec2 to find the interpolation
     vec2_t p = { x, y };
-    vec2_t a = vec2_from_vec4(point_a);
-    vec2_t b = vec2_from_vec4(point_b);
-    vec2_t c = vec2_from_vec4(point_c);
+    vec2_t a = { {0} };
+    vec2_from_vec4(point_a, &a);
+    vec2_t b = { {0} };
+    vec2_from_vec4(point_b, &b);
+    vec2_t c = { {0} };
+    vec2_from_vec4(point_c, &c);
 
     // Calculate the barycentric coordinates of our point 'p' inside the triangle
-    vec3_t weights = barycentric_weights(a, b, c, p);
+    vec3_t weights = { {0} };
+    barycentric_weights(&a, &b, &c, &p, &weights);
 
     // Fetch alpha, beta, and gamma from the barycentric coordinate calculation
     float alpha = weights.x;
@@ -95,7 +109,7 @@ void draw_triangle_pixel(
     float gamma = weights.z;
     
     // Interpolate the value of 1/w for the current pixel
-    float interpolated_reciprocal_w = (1 / point_a.w) * alpha + (1 / point_b.w) * beta + (1 / point_c.w) * gamma;
+    float interpolated_reciprocal_w = (1 / point_a->w) * alpha + (1 / point_b->w) * beta + (1 / point_c->w) * gamma;
 
     // Adjust 1/w so the pixels that are closer to the camera have smaller values
     interpolated_reciprocal_w = 1.0 - interpolated_reciprocal_w;
@@ -115,14 +129,17 @@ void draw_triangle_pixel(
 ///////////////////////////////////////////////////////////////////////////////
 void draw_triangle_texel(
     int x, int y,
-    vec4_t point_a, vec4_t point_b, vec4_t point_c,
-    tex2_t a_uv, tex2_t b_uv, tex2_t c_uv,
+    vec4_t* point_a, vec4_t* point_b, vec4_t* point_c,
+    tex2_t* a_uv, tex2_t* b_uv, tex2_t* c_uv,
     upng_t* texture
 ) {
     vec2_t p = { x, y };
-    vec2_t a = vec2_from_vec4(point_a);
-    vec2_t b = vec2_from_vec4(point_b);
-    vec2_t c = vec2_from_vec4(point_c);
+    vec2_t a = { {0} };
+    vec2_from_vec4(point_a, &a);
+    vec2_t b = { {0} };
+    vec2_from_vec4(point_b, &b);
+    vec2_t c = { {0} }; 
+    vec2_from_vec4(point_c, &c);
 
     // Calculate the barycentric coordinates of our point 'p' inside the triangle
     vec3_t weights = barycentric_weights(a, b, c, p);
@@ -138,11 +155,11 @@ void draw_triangle_texel(
     float interpolated_reciprocal_w;
 
     // Perform the interpolation of all U/w and V/w values using barycentric weights and a factor of 1/w
-    interpolated_u = (a_uv.u / point_a.w) * alpha + (b_uv.u / point_b.w) * beta + (c_uv.u / point_c.w) * gamma;
-    interpolated_v = (a_uv.v / point_a.w) * alpha + (b_uv.v / point_b.w) * beta + (c_uv.v / point_c.w) * gamma;
+    interpolated_u = (a_uv->u / point_a->w) * alpha + (b_uv->u / point_b->w) * beta + (c_uv->u / point_c->w) * gamma;
+    interpolated_v = (a_uv->v / point_a->w) * alpha + (b_uv->v / point_b->w) * beta + (c_uv->v / point_c->w) * gamma;
 
     // Also interpolate the value of 1/w for the current pixel
-    interpolated_reciprocal_w = (1 / point_a.w) * alpha + (1 / point_b.w) * beta + (1 / point_c.w) * gamma;
+    interpolated_reciprocal_w = (1 / point_a->w) * alpha + (1 / point_b->w) * beta + (1 / point_c->w) * gamma;
 
     // Now we can divide back both interpolated values by 1/w
     interpolated_u /= interpolated_reciprocal_w;
@@ -255,7 +272,7 @@ void draw_textured_triangle(
 
             for (int x = x_start; x < x_end; x++) {
                 // Draw our pixel with the color that comes from the texture
-                draw_triangle_texel(x, y, point_a, point_b, point_c, a_uv, b_uv, c_uv, texture);
+                draw_triangle_texel(x, y, &point_a, &point_b, &point_c, &a_uv, &b_uv, &c_uv, texture);
             }
         }
     }
@@ -280,7 +297,7 @@ void draw_textured_triangle(
 
             for (int x = x_start; x < x_end; x++) {
                 // Draw our pixel with the color that comes from the texture
-                draw_triangle_texel(x, y, point_a, point_b, point_c, a_uv, b_uv, c_uv, texture);
+                draw_triangle_texel(x, y, &point_a, &point_b, &point_c, &a_uv, &b_uv, &c_uv, texture);
             }
         }
     }
@@ -360,7 +377,7 @@ void draw_filled_triangle(
 
             for (int x = x_start; x < x_end; x++) {
                 // Draw our pixel with a solid color
-                draw_triangle_pixel(x, y, point_a, point_b, point_c, color);
+                draw_triangle_pixel(x, y, &point_a, &point_b, &point_c, color);
             }
         }
     }
@@ -385,7 +402,7 @@ void draw_filled_triangle(
 
             for (int x = x_start; x < x_end; x++) {
                 // Draw our pixel with a solid color
-                draw_triangle_pixel(x, y, point_a, point_b, point_c, color);
+                draw_triangle_pixel(x, y, &point_a, &point_b, &point_c, color);
             }
         }
     }

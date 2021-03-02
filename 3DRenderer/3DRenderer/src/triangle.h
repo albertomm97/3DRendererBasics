@@ -23,7 +23,7 @@ typedef struct {
     upng_t* texture;
 } triangle_t;
 
-vec3_t get_triangle_normal(vec4_t vertices[3]);
+void get_triangle_normal(vec4_t* vertices, vec3_t* face_normal);
 
 void draw_triangle(int x0, int y0, int x1, int y1, int x2, int y2, uint32_t color);
 
