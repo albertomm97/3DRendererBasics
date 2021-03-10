@@ -54,6 +54,12 @@ void vec2_normalize(vec2_t* v)
 ///////////////////////////////////////////////////////////////////////////////
 // Implementations of Vector 3 functions
 ///////////////////////////////////////////////////////////////////////////////
+vec3_t vec3_new1(float x, float y, float z)
+{
+    vec3_t v = { .x = x, .y = y, .z = z };
+    return v;
+}
+
 void vec3_new(float x, float y, float z, vec3_t* new) 
 {
     new->x = x;

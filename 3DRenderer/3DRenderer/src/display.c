@@ -13,16 +13,20 @@ static int window_height = 200;
 static int render_method = 0;
 static int cull_method = 0;
 
-int get_window_width(void) {
+int get_window_width(void) 
+{
     return window_width;
 }
 
-int get_window_height(void) {
+int get_window_height(void) 
+{
     return window_height;
 }
 
-bool init_window(void) {
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+bool init_window(void) 
+{
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) 
+    {
         fprintf(stderr, "Error initializing SDL.\n");
         return false;
     }
@@ -38,14 +42,16 @@ bool init_window(void) {
 
     // Create a SDL Window
     window = SDL_CreateWindow(NULL, 0, 0, fullscreen_width, fullscreen_height, SDL_WINDOW_BORDERLESS);
-    if (!window) {
+    if (!window) 
+    {
         fprintf(stderr, "Error creating SDL window.\n");
         return false;
     }
 
     // Create a SDL renderer
     renderer = SDL_CreateRenderer(window, -1, 0);
-    if (!renderer) {
+    if (!renderer) 
+    {
         fprintf(stderr, "Error creating SDL renderer.\n");
         return false;
     }
@@ -66,15 +72,18 @@ bool init_window(void) {
     return true;
 }
 
-void set_render_method(int method) {
+void set_render_method(int method) 
+{
     render_method = method;
 }
 
-void set_cull_method(int method) {
+void set_cull_method(int method) 
+{
     cull_method = method;
 }
 
-bool should_render_wire(void) {
+bool should_render_wire(void) 
+{
     return (
         render_method == RENDER_WIRE ||
         render_method == RENDER_WIRE_VERTEX ||
@@ -83,31 +92,36 @@ bool should_render_wire(void) {
     );
 }
 
-bool should_render_wire_vertex(void) {
+bool should_render_wire_vertex(void) 
+{
     return (
         render_method == RENDER_WIRE_VERTEX
     );
 }
 
-bool should_render_filled_triangle(void) {
+bool should_render_filled_triangle(void) 
+{
     return (
         render_method == RENDER_FILL_TRIANGLE ||
         render_method == RENDER_FILL_TRIANGLE_WIRE 
     );
 }
 
-bool should_render_textured_triangle(void) {
+bool should_render_textured_triangle(void) 
+{
     return (
         render_method == RENDER_TEXTURED ||
         render_method == RENDER_TEXTURED_WIRE
     );
 }
 
-bool should_cull_backface(void) {
+bool should_cull_backface(void) 
+{
     return cull_method == CULL_BACKFACE;
 }
 
-void draw_grid(void) {
+void draw_grid(void) 
+{
     for (int y = 0; y < window_height; y += 10) {
         for (int x = 0; x < window_width; x += 10) {
             colorbuffer[(window_width * y) + x] = 0xFF444444;
@@ -115,14 +129,16 @@ void draw_grid(void) {
     }
 }
 
-void draw_pixel(int x, int y, uint32_t color) {
+void draw_pixel(int x, int y, uint32_t color) 
+{
     if (x < 0 || x >= window_width || y < 0 || y >= window_height) {
         return;
     }
     colorbuffer[(window_width * y) + x] = color;
 }
 
-void draw_line(int x0, int y0, int x1, int y1, uint32_t color) {
+void draw_line(int x0, int y0, int x1, int y1, uint32_t color) 
+{
     int delta_x = (x1 - x0);
     int delta_y = (y1 - y0);
 
@@ -141,7 +157,8 @@ void draw_line(int x0, int y0, int x1, int y1, uint32_t color) {
     }
 }
 
-void draw_rect(int x, int y, int width, int height, uint32_t color) {
+void draw_rect(int x, int y, int width, int height, uint32_t color) 
+{
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             int current_x = x + i;
@@ -151,7 +168,8 @@ void draw_rect(int x, int y, int width, int height, uint32_t color) {
     }
 }
 
-void render_color_buffer(void) {
+void render_color_buffer(void) 
+{
     SDL_UpdateTexture(
         colorbuffer_texture,
         NULL,
@@ -162,33 +180,42 @@ void render_color_buffer(void) {
     SDL_RenderPresent(renderer);
 }
 
-void clear_color_buffer(uint32_t color) {
-    for (int i = 0; i < window_width * window_height; i++) {
+void clear_color_buffer(uint32_t color) 
+{
+    for (int i = 0; i < window_width * window_height; i++) 
+    {
         colorbuffer[i] = color;
     }
 }
 
-void clear_z_buffer(void) {
-    for (int i = 0; i < window_width * window_height; i++) {
+void clear_z_buffer(void) 
+{
+    for (int i = 0; i < window_width * window_height; i++) 
+    {
         zbuffer[i] = 1.0;
     }
 }
 
-float get_zbuffer_at(int x, int y) {
-    if (x < 0 || x >= window_width || y < 0 || y >= window_height) {
+float get_zbuffer_at(int x, int y) 
+{
+    if (x < 0 || x >= window_width || y < 0 || y >= window_height) 
+    {
         return 1.0;
     }
     return zbuffer[(window_width * y) + x];
 }
 
-void update_zbuffer_at(int x, int y, float value) {
-    if (x < 0 || x >= window_width || y < 0 || y >= window_height) {
+void update_zbuffer_at(int x, int y, float value) 
+{
+    if (x < 0 || x >= window_width || y < 0 || y >= window_height) 
+    {
         return;
     }
     zbuffer[(window_width * y) + x] = value;
 }
 
-void destroy_window(void) {
+void destroy_window(void) 
+{
     free(colorbuffer);
     free(zbuffer);
     SDL_DestroyRenderer(renderer);

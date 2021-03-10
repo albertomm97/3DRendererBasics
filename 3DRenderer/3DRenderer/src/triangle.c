@@ -43,7 +43,7 @@ void get_triangle_normal(vec4_t* vertices, vec3_t* face_normal)
 //  B ------------- C
 //
 ///////////////////////////////////////////////////////////////////////////////
-vec3_t barycentric_weights(vec2_t* a, vec2_t* b, vec2_t* c, vec2_t* p, vec3_t* r) {
+void barycentric_weights(vec2_t* a, vec2_t* b, vec2_t* c, vec2_t* p, vec3_t* r) {
     // Find the vectors between the vertices ABC and point p
     vec2_t ab = { {0} };
     vec2_sub(b, a, &ab);
@@ -142,7 +142,8 @@ void draw_triangle_texel(
     vec2_from_vec4(point_c, &c);
 
     // Calculate the barycentric coordinates of our point 'p' inside the triangle
-    vec3_t weights = barycentric_weights(a, b, c, p);
+    vec3_t weights = { {0} };
+    barycentric_weights(&a, &b, &c, &p, &weights);
 
     // Fetch alpha, beta, and gamma from the barycentric coordinates calculation
     float alpha = weights.x;
@@ -331,21 +332,25 @@ void draw_filled_triangle(
     int x1, int y1, float z1, float w1,
     int x2, int y2, float z2, float w2,
     uint32_t color
-) {
+) 
+{
     // We need to sort the vertices by y-coordinate ascending (y0 < y1 < y2)
-    if (y0 > y1) {
+    if (y0 > y1) 
+    {
         int_swap(&y0, &y1);
         int_swap(&x0, &x1);
         float_swap(&z0, &z1);
         float_swap(&w0, &w1);
     }
-    if (y1 > y2) {
+    if (y1 > y2) 
+    {
         int_swap(&y1, &y2);
         int_swap(&x1, &x2);
         float_swap(&z1, &z2);
         float_swap(&w1, &w2);
     }
-    if (y0 > y1) {
+    if (y0 > y1) 
+    {
         int_swap(&y0, &y1);
         int_swap(&x0, &x1);
         float_swap(&z0, &z1);
@@ -366,16 +371,20 @@ void draw_filled_triangle(
     if (y1 - y0 != 0) inv_slope_1 = (float)(x1 - x0) / abs(y1 - y0);
     if (y2 - y0 != 0) inv_slope_2 = (float)(x2 - x0) / abs(y2 - y0);
 
-    if (y1 - y0 != 0) {
-        for (int y = y0; y <= y1; y++) {
+    if (y1 - y0 != 0) 
+    {
+        for (int y = y0; y <= y1; y++) 
+        {
             int x_start = x1 + (y - y1) * inv_slope_1;
             int x_end = x0 + (y - y0) * inv_slope_2;
 
-            if (x_end < x_start) {
+            if (x_end < x_start) 
+            {
                 int_swap(&x_start, &x_end); // swap if x_start is to the right of x_end
             }
 
-            for (int x = x_start; x < x_end; x++) {
+            for (int x = x_start; x < x_end; x++) 
+            {
                 // Draw our pixel with a solid color
                 draw_triangle_pixel(x, y, &point_a, &point_b, &point_c, color);
             }
@@ -391,16 +400,20 @@ void draw_filled_triangle(
     if (y2 - y1 != 0) inv_slope_1 = (float)(x2 - x1) / abs(y2 - y1);
     if (y2 - y0 != 0) inv_slope_2 = (float)(x2 - x0) / abs(y2 - y0);
 
-    if (y2 - y1 != 0) {
-        for (int y = y1; y <= y2; y++) {
+    if (y2 - y1 != 0) 
+    {
+        for (int y = y1; y <= y2; y++) 
+        {
             int x_start = x1 + (y - y1) * inv_slope_1;
             int x_end = x0 + (y - y0) * inv_slope_2;
 
-            if (x_end < x_start) {
+            if (x_end < x_start) 
+            {
                 int_swap(&x_start, &x_end); // swap if x_start is to the right of x_end
             }
 
-            for (int x = x_start; x < x_end; x++) {
+            for (int x = x_start; x < x_end; x++) 
+            {
                 // Draw our pixel with a solid color
                 draw_triangle_pixel(x, y, &point_a, &point_b, &point_c, color);
             }

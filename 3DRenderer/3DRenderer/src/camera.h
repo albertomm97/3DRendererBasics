@@ -27,6 +27,6 @@ void update_camera_forward_velocity(vec3_t forward_velocity);
 void rotate_camera_yaw(float angle);
 void rotate_camera_pitch(float angle);
 
-vec3_t get_camera_lookat_target(void);
+void get_camera_lookat_target(vec3_t* target);
 
 #endif

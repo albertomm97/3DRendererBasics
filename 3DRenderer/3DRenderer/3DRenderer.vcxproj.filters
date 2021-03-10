@@ -33,9 +33,6 @@
     <ClCompile Include="src\light.c">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.c">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="src\matrix.c">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -95,41 +92,5 @@
     <ClInclude Include="src\vector.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="assets\crab.obj" />
-    <Object Include="assets\sphere.obj" />
-    <Object Include="assets\runway.obj" />
-    <Object Include="assets\cube.obj" />
-    <Object Include="assets\drone.obj" />
-    <Object Include="assets\efa.obj" />
-    <Object Include="assets\f22.obj" />
-    <Object Include="assets\f117.obj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="assets\runway.png">
-      <Filter>Archivos de recursos</Filter>
-    </Image>
-    <Image Include="assets\cube.png">
-      <Filter>Archivos de recursos</Filter>
-    </Image>
-    <Image Include="assets\drone.png">
-      <Filter>Archivos de recursos</Filter>
-    </Image>
-    <Image Include="assets\efa.png">
-      <Filter>Archivos de recursos</Filter>
-    </Image>
-    <Image Include="assets\f22.png">
-      <Filter>Archivos de recursos</Filter>
-    </Image>
-    <Image Include="assets\f117.png">
-      <Filter>Archivos de recursos</Filter>
-    </Image>
-    <Image Include="assets\pikuma.png">
-      <Filter>Archivos de recursos</Filter>
-    </Image>
-    <Image Include="assets\crab.png">
-      <Filter>Archivos de recursos</Filter>
-    </Image>
   </ItemGroup>
 </Project>

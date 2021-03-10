@@ -25,7 +25,6 @@
     <ClCompile Include="src\clipping.c" />
     <ClCompile Include="src\display.c" />
     <ClCompile Include="src\light.c" />
-    <ClCompile Include="src\main.c" />
     <ClCompile Include="src\matrix.c" />
     <ClCompile Include="src\mesh.c" />
     <ClCompile Include="src\swap.c" />
@@ -47,26 +46,6 @@
     <ClInclude Include="src\triangle.h" />
     <ClInclude Include="src\upng.h" />
     <ClInclude Include="src\vector.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="assets\crab.obj" />
-    <Object Include="assets\cube.obj" />
-    <Object Include="assets\drone.obj" />
-    <Object Include="assets\efa.obj" />
-    <Object Include="assets\f117.obj" />
-    <Object Include="assets\f22.obj" />
-    <Object Include="assets\runway.obj" />
-    <Object Include="assets\sphere.obj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="assets\crab.png" />
-    <Image Include="assets\cube.png" />
-    <Image Include="assets\drone.png" />
-    <Image Include="assets\efa.png" />
-    <Image Include="assets\f117.png" />
-    <Image Include="assets\f22.png" />
-    <Image Include="assets\pikuma.png" />
-    <Image Include="assets\runway.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -164,12 +143,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -178,7 +159,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -186,6 +167,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

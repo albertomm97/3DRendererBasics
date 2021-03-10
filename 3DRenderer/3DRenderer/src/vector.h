@@ -27,6 +27,7 @@ void vec2_normalize(vec2_t* v);
 ////////////////////////////////////////////////////////////////////////////////
 // Vector 3 functions
 ////////////////////////////////////////////////////////////////////////////////
+vec3_t vec3_new1(float x, float y, float z);
 void vec3_new(float x, float y, float z, vec3_t* new);
 void vec3_clone(vec3_t* v, vec3_t* out);
 float vec3_length(vec3_t* v);

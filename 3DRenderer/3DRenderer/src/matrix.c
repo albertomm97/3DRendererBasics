@@ -8,12 +8,14 @@ void mat4_identity(mat4_t* m)
     // | 0 1 0 0 |
     // | 0 0 1 0 |
     // | 0 0 0 1 |
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < 4; i++) 
+    {
+        for (int j = 0; j < 4; j++) 
+        {
             if (i == j)
                 m->m[i][j] = 1;
             else
-                m->m[i][j] = 1;
+                m->m[i][j] = 0;
         }
     }
 }
@@ -104,7 +106,8 @@ void mat4_mul_mat4(mat4_t* a, mat4_t* b, mat4_t* m)
     }
 }
 
-void mat4_make_perspective(float fov, float aspect, float znear, float zfar, mat4_t* r) {
+void mat4_make_perspective(float fov, float aspect, float znear, float zfar, mat4_t* r) 
+{
     // | (h/w)*1/tan(fov/2)             0              0                 0 |
     // |                  0  1/tan(fov/2)              0                 0 |
     // |                  0             0     zf/(zf-zn)  (-zf*zn)/(zf-zn) |
@@ -119,9 +122,10 @@ void mat4_make_perspective(float fov, float aspect, float znear, float zfar, mat
     r->m[3][2] = 1.0;
 }
 
-void mat4_look_at(vec3_t* eye, vec3_t* target, vec3_t* up, mat4_t* v) {
+void mat4_look_at(vec3_t* eye, vec3_t* target, vec3_t* up, mat4_t* v) 
+{
     // Compute the forward (z), right (x), and up (y) vectors
-    vec3_sub(target, eye);
+    vec3_sub(target, eye, target);
     vec3_normalize(&target);
     vec3_t x = { {0} };
     vec3_cross(up, target, &x);
